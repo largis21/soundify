@@ -1,0 +1,45 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  user_id  Int        @id @default(autoincrement()) 
+  username String 
+  password String
+  playlist Playlist[]
+}
+
+model Playlist_Song {
+  playlist_song_id Int @id @default(autoincrement())
+  playlist         Playlist @relation(fields: [playlist_id], references: [playlist_id]) 
+  playlist_id      Int
+  song             Song @relation(fields: [song_id], references: [song_id])
+  song_id          Int
+}
+
+model Playlist {
+  playlist_id   Int    @id @default(autoincrement())
+  playlist_name String
+  owner         User   @relation(fields: [owner_id], references: [user_id])
+  owner_id      Int
+  playlist_song Playlist_Song[]
+}
+
+model Song {
+  song_id   Int @id @default(autoincrement())
+  song_name String
+  artist    Artist @relation(fields: [artist_id], references: [artist_id])
+  artist_id Int
+  playlist_song Playlist_Song[]
+}
+
+model Artist {
+  artist_id Int @id @default(autoincrement())
+  artist_name String
+  song Song[]
+}

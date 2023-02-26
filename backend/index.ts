@@ -1,9 +1,14 @@
 import express from "express";
+import fs from "fs";
+import prisma from "./lib/prismaclient";
+import bodyParser from "body-parser";
+
+import userRoute from "./routes/user";
 
 const app = express();
 
-app.get("/", (req, res) => {
-  res.send("HEI");
-});
+app.use(bodyParser.json())
+
+app.use("/user", userRoute);
 
 app.listen(8080);

@@ -22,8 +22,12 @@ app/*.sw?
 app/package-lock.json
 app/pnpm-lock.yaml
 app/yarn.lock
-/app/.vscode
+app/.vscode
 
 /backend/node_modules
+/backend/songs
+/backend/erd
+/backend/dist/
 
+*.env
 .vscode
