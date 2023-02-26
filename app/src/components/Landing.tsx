@@ -30,6 +30,10 @@ type CardProps = {
 };
 
 function Card({ imageURL, title, type, artists }: CardProps) {
+  function handleCardClicked() {
+    console.log("hei")
+  }
+
   return (
     <div className="w-52 h-72 rounded-xl bg-neutral-800 p-4 group hover:bg-neutral-700 transition-colors">
       <div className="relative">
@@ -41,7 +45,8 @@ function Card({ imageURL, title, type, artists }: CardProps) {
         <button
           className="
           rounded-full aspect-square absolute right-3 bottom-0 opacity-0 bg-soundifyGreen w-10 p-2 flex justify-center items-center focus:outline-none
-          group-hover:bottom-3 group-hover:opacity-100 transition-all duration-300 "
+          group-hover:bottom-3 group-hover:opacity-100 transition-all duration-300"
+          onClick={handleCardClicked}
         >
           <img src={"/icons/play.svg"} alt="Play" />
         </button>
