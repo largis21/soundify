@@ -59,14 +59,14 @@ router.post("/", async (
         return
     }
    
-    res.status(200).json({ user_id: newUser});
+    res.status(201).json({ user_id: newUser});
 });
 
 async function createNewUser(username: string, password: string): Promise<number | void> {
     const newUser = await prismaclient.user.create({
         data: {
             username: username,
-            password: password 
+            password: SHA256(password).toString(),
         }
     })    
     
