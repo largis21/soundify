@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 
 export default function Controlbar() {
   return (
-    <div className="w-screen h-20 bg-neutral-800 flex justify-center border-t-[1px] border-neutral-700 select-none">
+    <div className="fixed bottom-0 w-screen h-20 bg-neutral-800 flex justify-center border-t-[1px] border-neutral-700 select-none">
       <div className="flex flex-col items-center justify-evenly">
         <MainControls />
         <DurationSlider />
@@ -24,7 +24,7 @@ function MainControls() {
         <ShuffleIcon active={shuffleEnabled} />
       </button>
       <button>
-        <img src="/icons/nextprev.svg" alt="Previous song" />
+       <img src="/icons/nextprev.svg" alt="Previous song" />
       </button>
       <button
         className={`${

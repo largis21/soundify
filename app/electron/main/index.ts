@@ -53,7 +53,13 @@ async function createWindow() {
       contextIsolation: false,
     },
     autoHideMenuBar: true,
-    titleBarStyle: "customButtonsOnHover",
+    titleBarStyle: "hidden",
+    titleBarOverlay: {
+      color: "rgba(0,0,0,0.5)",
+      symbolColor: "white",
+    },
+    minWidth: 815,
+    minHeight: 600,
   });
 
   if (process.env.VITE_DEV_SERVER_URL) {
