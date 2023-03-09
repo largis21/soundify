@@ -8,9 +8,9 @@ import userRoute from "./routes/user";
 import loginRoute from "./routes/login";
 
 const app = express();
-
+console.log(process.env.FRONTEND_URL)
 app.use(cors({
-  origin: 'http://localhost:5173',
+  origin: process.env.FRONTEND_URL || 'http://localhost:5173',
   credentials: true
 }))
 app.use(bodyParser.json())

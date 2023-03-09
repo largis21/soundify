@@ -54,7 +54,11 @@ router.post("/", async (
     secure: false,
     expires: new Date(Date.now() + 2 * 3600000) 
   })
-  res.status(200).json({ user_id: user.user_id })
+
+  res.status(200).json({ 
+    user_id: user.user_id,
+    username: user.username
+  })
 });
 
 export default router;
