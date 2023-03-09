@@ -2,7 +2,7 @@ export default function Landing() {
   return (
     <div className="flex-[3] bg-neutral-900 overflow-x-hidden">
       <h2 className="text-white text-4xl font-bold my-10 ml-5">
-        God ettermiddag
+        God ettermiddag (&lt;- hardkoda az)
       </h2>
       <div className="flex flex-wrap [&>*]:ml-5 [&>*]:mt-5 overflow-auto">
         <Card

@@ -2,38 +2,36 @@ import express, { Request, Response } from "express";
 import prismaclient from "../lib/prismaclient";
 import authMiddleware from "../middleware/auth";
 import SHA256 from "crypto-js/sha256"
+import { User } from "@prisma/client";
 
 const router = express.Router();
 
-type UserResponse = {
-    username?: string;
-    error?: string;
-};
-
-router.get("/", authMiddleware, async (
-    req: Request, 
-    res: Response<UserResponse[]>
-) => {
-    console.log("All users") 
-});
+type UserResponse = Omit<User, "password">
 
 router.get("/:id", async (
     req: Request, 
-    res: Response<UserResponse>
+    res: Response<UserResponse | { error:string }>
 ) => {
     const { id: slugId = "" } = req.params
 
     const user = await prismaclient.user.findUnique({
-        where: {
-            user_id: parseInt(slugId)
-        }
+      where: {
+        user_id: parseInt(slugId)
+      },
+      include: {
+        playlist: true,
+      }
     })
 
     if (!user) {
-        res.status(404).json({ error: "Couldn't find user"})
+      res.status(404).json({ error: "Couldn't find user"})
+      return
     }
     
-    res.status(200).json({ username: slugId });
+    res.status(200).json({ 
+      username: user.username,
+      user_id: user.user_id 
+    });
 });
 
 type NewUserResponse= {
@@ -51,11 +49,22 @@ router.post("/", async (
         res.status(400).json({ error: "Bad request"})
         return
     }
+
+    const oldUser = await prismaclient.user.findFirst({
+        where: {
+            username
+        }
+    })
+
+    if (oldUser) {
+      res.status(409).json({ error: "A user with that username already exists" })
+      return
+    }
    
     const newUser = await createNewUser(username, password)
     
     if (!newUser) {
-        res.status(500).json({ error: "Internal server error"})
+        res.status(500).json({ error: "Internal server error" })
         return
     }
    

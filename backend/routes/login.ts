@@ -49,7 +49,11 @@ router.post("/", async (
     user_id: user.user_id,
   })
 
-  res.cookie("soundify_token", userToken)
+  res.cookie("soundify_token", userToken, {
+    httpOnly: true,
+    secure: false,
+    expires: new Date(Date.now() + 2 * 3600000) 
+  })
   res.status(200).json({ user_id: user.user_id })
 });
 
