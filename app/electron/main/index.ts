@@ -40,6 +40,7 @@ const preload = join(__dirname, "../preload/index.js");
 const url = process.env.VITE_DEV_SERVER_URL;
 const indexHtml = join(process.env.DIST, "index.html");
 
+console.log(indexHtml)
 async function createWindow() {
   win = new BrowserWindow({
     title: "Main window",

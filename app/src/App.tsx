@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import LandingPage from "./pages/landing";
 import LoginPage from "./pages/login";
-import "dotenv/config"
 import { UserData, UserDataType, UserLoginInfoType} from "../utils/types"
+import { API_URL } from "../ENVIRONMENT"
 
 export default function App() {
   const [user, setUser] = useState<UserDataType | null>(null)//{user_id: 1, username: "asdas"}
@@ -12,7 +12,7 @@ export default function App() {
     loginInfo: UserLoginInfoType, 
     ignoreResult: boolean
   ) {
-    const loginEndpoint = `${process.env.API_URL}/login`
+    const loginEndpoint = `${API_URL}/login`
 
     const response = await fetch(loginEndpoint, {
       method: "POST",
