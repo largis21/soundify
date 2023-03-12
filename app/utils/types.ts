@@ -7,3 +7,11 @@ export const UserData = z.object({
 
 export type UserDataType = z.infer<typeof UserData>
 
+export const UserLoginInfo = z.object({
+  username: z.string(),
+  password: z.string()
+})
+
+export type UserLoginInfoType = z.infer<typeof UserLoginInfo>
+
+export type Routes = "home" | "search" | "library" | "playlist"

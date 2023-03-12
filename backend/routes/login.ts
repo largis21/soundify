@@ -3,6 +3,7 @@ import prismaclient from "../lib/prismaclient";
 import SHA256 from "crypto-js/sha256";
 import { z } from "zod";
 import { createSigner } from "fast-jwt";
+import { getAuth } from "../auth";
 
 const router = express.Router();
 
@@ -15,7 +16,28 @@ router.post("/", async (
   req: Request, 
   res: Response
 ) => {
+  const auth = getAuth(req)
+  if (auth.user_id) {
+    const user = await prismaclient.user.findFirst({
+      where: {
+         user_id: auth.user_id
+      }
+    })
+
+    if (!user) {
+      res.status(500).json({ error: "Internal server error"})
+      return 
+    }
+
+    res.status(200).json({
+      username: user.username,
+      user_id: user.user_id
+    })
+    return
+  }
+
   const parsedBody = loginRequest.safeParse(req.body);
+
   if (!parsedBody.success) {
     res.status(400).json({ error: "Bad request" });
     return
@@ -45,14 +67,17 @@ router.post("/", async (
 
   const jwtSigner = createSigner({ key: apiToken })
 
+  const tokenExpires = Date.now() + 2 * 3600000
+
   const userToken = jwtSigner({ 
     user_id: user.user_id,
+    expires: tokenExpires 
   })
 
   res.cookie("soundify_token", userToken, {
     httpOnly: true,
     secure: false,
-    expires: new Date(Date.now() + 2 * 3600000) 
+    expires: new Date(tokenExpires) 
   })
 
   res.status(200).json({ 

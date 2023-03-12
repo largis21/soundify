@@ -2,40 +2,21 @@ import { useEffect, useState } from "react";
 import LandingPage from "./pages/landing";
 import LoginPage from "./pages/login";
 import "dotenv/config"
-import { z } from "zod"
-import { UserData, UserDataType} from "../utils/types"
+import { UserData, UserDataType, UserLoginInfoType} from "../utils/types"
 
-const UserLoginInfo = z.object({
-  username: z.string(),
-  password: z.string()
-})
-
-type UserLoginInfo = z.infer<typeof UserLoginInfo>
-
-function App() {
+export default function App() {
   const [user, setUser] = useState<UserDataType | null>(null)//{user_id: 1, username: "asdas"}
+  const [loginError, setLoginError] = useState("")
 
-  useEffect(() => {
-    const userLoginInfo = localStorage.getItem("loginInfo")
-
-    if (userLoginInfo && !user) {
-      const parsedLoginInfo = 
-        UserLoginInfo.safeParse(JSON.parse(userLoginInfo))
-      
-      if (!parsedLoginInfo.success) return 
-
-      getUser(parsedLoginInfo.data)
-    }
-
-    localStorage.setItem("loginInfo", "")
-  })
-
-  async function getUser(userLoginInfo: UserLoginInfo) {
+  async function sendLoginRequest(
+    loginInfo: UserLoginInfoType, 
+    ignoreResult: boolean
+  ) {
     const loginEndpoint = `${process.env.API_URL}/login`
 
     const response = await fetch(loginEndpoint, {
       method: "POST",
-      body: JSON.stringify(userLoginInfo),
+      body: JSON.stringify(loginInfo),
       headers: {
         "Content-Type": "application/json"
       },
@@ -43,20 +24,25 @@ function App() {
     })
 
     if (!response.ok) {
+      if (!ignoreResult) setLoginError((await response.json()).error)
       return
     }
+
     const data = await response.json()
-    console.log(data)
     const parsedUserData = UserData.safeParse(data)
+
     if (parsedUserData.success) {
-      console.log("auisdhuiasidhiashd", parsedUserData.data)
       setUser(parsedUserData.data)
+    } else {
+      console.log(parsedUserData.error)
+      setLoginError("Failed to login")
     }
   }
 
   useEffect(() => {
-    console.log(user)
-  }, [user])
+    // Sends a login request with cookies
+    sendLoginRequest({username: "", password: ""}, true)
+  }, [])
 
   if (user) {
     return (
@@ -65,8 +51,6 @@ function App() {
   }
 
   return (
-    <LoginPage />
+    <LoginPage sendLoginRequest={sendLoginRequest} errorText={loginError} />
   );
 }
-
-export default App;
