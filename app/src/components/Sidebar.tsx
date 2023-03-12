@@ -1,4 +1,3 @@
-import { Router } from "@/pages/landing";
 import { Routes } from "utils/types";
 
 const sidebarItems: {
@@ -12,7 +11,13 @@ const sidebarItems: {
   { imgSrc: "/icons/plus.svg", itemText: "Ny Spilleliste", route: "playlist" },
 ]
 
-export default function Sidebar({ router }: { router: Router }) {
+export default function Sidebar({ 
+  route,
+  setRoute
+}: { 
+  route: Routes,
+  setRoute: (newRoute: Routes) => any
+}) {
   return (
     <div className="w-[250px] pl-[25px] pr-[25px] text-white bg-black overflow-x-hidden">
       <ul className="mt-[25px]">
@@ -20,8 +25,8 @@ export default function Sidebar({ router }: { router: Router }) {
           <SidebarItem 
             imgSrc={item.imgSrc}
             itemText={item.itemText}
-            active={router.getCurrentRoute() === item.route}
-            onClick={() => router.setCurrentRoute(item.route)}
+            active={route === item.route}
+            onClick={() => setRoute(item.route)}
           />
         ))}
       </ul>
