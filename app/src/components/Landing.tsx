@@ -40,7 +40,7 @@ function Card({ imageURL, title, type, artists }: CardProps) {
     <div className="w-52 h-72 rounded-xl bg-neutral-800 p-4 group hover:bg-neutral-700 transition-colors">
       <div className="relative">
         <img
-          src={imageURL ? imageURL : "/icons/cd_placeholder.svg"}
+          src={imageURL ? imageURL : "../public/icons/cd_placeholder.svg"}
           alt="Cover"
           className="rounded-lg w-full aspect-square"
         />
@@ -50,7 +50,7 @@ function Card({ imageURL, title, type, artists }: CardProps) {
           group-hover:bottom-3 group-hover:opacity-100 transition-all duration-300"
           onClick={handleCardClicked}
         >
-          <img src={"/icons/play.svg"} alt="Play" />
+          <img src={"../public/icons/play.svg"} alt="Play" />
         </button>
       </div>
       <h3 className="text-white text-xl font-semibold mt-3 ">{title}</h3>

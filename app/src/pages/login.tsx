@@ -11,8 +11,8 @@ export default function LoginPage({
   ) => any,
   errorText: string
 }) {
-  const [usernameInput, setUsernameInput] = useState("")
-  const [passwordInput, setPasswordInput] = useState("")
+  const [usernameInput, setUsernameInput] = useState("root")
+  const [passwordInput, setPasswordInput] = useState("root")
 
   function handleSignInClicked() {
     sendLoginRequest({ 

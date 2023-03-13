@@ -24,7 +24,7 @@ function MainControls() {
         <ShuffleIcon active={shuffleEnabled} />
       </button>
       <button>
-       <img src="/icons/nextprev.svg" alt="Previous song" />
+       <img src="../public/icons/nextprev.svg" alt="Previous song" />
       </button>
       <button
         className={`${
@@ -44,13 +44,13 @@ function MainControls() {
         }}
       >
         {isPaused ? (
-          <img src={"/icons/pause.svg"} />
+          <img src={"../public/icons/pause.svg"} />
         ) : (
-          <img src={"/icons/play.svg"} />
+          <img src={"../public/icons/play.svg"} />
         )}
       </button>
       <button>
-        <img src="/icons/nextprev.svg" alt="Next song" className="rotate-180" />
+        <img src="../public/icons/nextprev.svg" alt="Next song" className="rotate-180" />
       </button>
       <button onClick={() => setRepeatEnabled(!repeatEnabled)}>
         <RepeatIcon active={repeatEnabled} />

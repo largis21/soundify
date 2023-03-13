@@ -18,11 +18,12 @@
       "output": "dist"
     },
     "extraFiles": [
-      "./dist/assets/**"
+      "./dist/icons/**"
     ],
     "files": [
       "**/*",
-      "./dist/**/*"
+      "./dist/**/*",
+      "./dist/icons/**"
     ],
     "linux": {
       "target": [
