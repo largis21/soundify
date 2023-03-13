@@ -2,9 +2,9 @@ import Controlbar from "../components/Controlbar";
 import Sidebar from "../components/Sidebar";
 import Landing from "../components/Landing";
 import { Routes, UserDataType} from "../../utils/types";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
-export default function LandingPage({ user }: { user: UserDataType }) {
+export default function MainPage({ user }: { user: UserDataType }) {
   const [route, setRoute] = useState<Routes>("home")
 
   return (
