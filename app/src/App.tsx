@@ -5,7 +5,7 @@ import { UserData, UserDataType, UserLoginInfoType} from "../utils/types"
 import { API_URL } from "../ENV"
 
 export default function App() {
-  const [user, setUser] = useState<UserDataType | null>(null)//{user_id: 1, username: "asdas"}
+  const [user, setUser] = useState<UserDataType | null>(null)
   const [loginError, setLoginError] = useState("")
 
   async function sendLoginRequest(

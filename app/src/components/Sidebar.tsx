@@ -1,4 +1,5 @@
-import { Routes } from "utils/types";
+import { Routes, UserDataType } from "utils/types";
+import { PlaylistType } from "./Playlist";
 
 const sidebarItems: {
     imgSrc: string,
@@ -14,10 +15,14 @@ const sidebarItems: {
 
 export default function Sidebar({ 
   route,
-  setRoute
+  setRoute,
+  setCurrentPlaylist,
+  playlists
 }: { 
   route: Routes,
-  setRoute: (newRoute: Routes) => any
+  setRoute: (newRoute: Routes) => any,
+  setCurrentPlaylist: (playlist: PlaylistType) => any,
+  playlists: UserDataType["playlists"]
 }) {
   return (
     <div className="w-[250px] pl-[25px] pr-[25px] text-white bg-black overflow-x-hidden">
@@ -32,9 +37,19 @@ export default function Sidebar({
         ))}
       </ul>
       <ul className="mt-5 pt-3 border-t-neutral-500 border-t-[1px]">
-        <li className="flex items-center h-10 cursor-pointer opacity-80 hover:opacity-100 transition-opacity">
-          <p className="font-bold text-sm">Spilleliste #1</p>
-        </li>
+        {
+          playlists.map((playlist) => (
+            <li 
+              className="flex items-center h-10 cursor-pointer opacity-80 hover:opacity-100 transition-opacity"
+              onClick={() => {
+                setCurrentPlaylist(playlist)
+                setRoute("playlist")
+              }}
+            >
+              <p className="font-bold text-sm">{playlist.playlist_name}</p>
+            </li>
+          ))
+        }
       </ul>
     </div>
   );

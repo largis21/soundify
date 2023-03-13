@@ -1,30 +1,15 @@
-import { z } from "zod"
-
-export const Playlist = z.object({
-  playlist_id: z.number(),
-  playlist_name: z.string(),
-  songs: z.object({
-    song_id: z.number(),
-    song_name: z.string(),
-    artist: z.object({
-      artist_id: z.number(),
-      artist_name: z.string()
-    })
-  }).array()
-})
-
-export type PlaylistType = z.infer<typeof Playlist>
+import { PlaylistDataType } from "utils/types"
 
 export default function PlaylistPage({ 
   playlist 
 }: { 
-  playlist: PlaylistType 
+  playlist: PlaylistDataType 
 }) {
   return (
     <div className="bg-neutral-900 flex-grow overflow-x-hidden">
     <header className="bg-neutral-800 py-10">
       <h2 className="text-white text-5xl font-bold ml-5">
-        {`Min spilleliste #1`}
+        {playlist.playlist_name}
       </h2>
     </header>
       <div className="flex flex-col overflow-auto">
