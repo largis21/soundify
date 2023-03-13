@@ -3,6 +3,7 @@ import Sidebar from "../components/Sidebar";
 import Landing from "../components/Landing";
 import { Routes, UserDataType} from "../../utils/types";
 import { useState } from "react";
+import PlaylistPage from "@/components/Playlist";
 
 export default function MainPage({ user }: { user: UserDataType }) {
   const [route, setRoute] = useState<Routes>("home")
@@ -31,6 +32,8 @@ function RouteSwitcher({
   switch (route) {
     case "home":
       return <Landing user={user}/>
+    case "playlist":
+      return <PlaylistPage />
   }
 
   return <></>
