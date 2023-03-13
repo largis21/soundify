@@ -20,7 +20,10 @@ router.post("/", async (
   if (auth.user_id) {
     const user = await prismaclient.user.findFirst({
       where: {
-         user_id: auth.user_id
+       user_id: auth.user_id
+      },
+      include: {
+        playlist: true
       }
     })
 

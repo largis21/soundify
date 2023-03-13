@@ -89,13 +89,13 @@ function ShuffleIcon({ active }: { active: boolean }) {
       <path
         d="M15.5928 13.4786C8.28985 13.4786 8.48723 2.52142 -2.23964e-05 2.52142"
         stroke={active ? "#42AB47" : "#8F8F8F"}
-        stroke-width="2"
+        strokeWidth="2"
         className="duration-300"
       />
       <path
         d="M0 13.4786C7.30298 13.4786 7.10561 2.52142 15.5929 2.52142"
         stroke={active ? "#42AB47" : "#8F8F8F"}
-        stroke-width="2"
+        strokeWidth="2"
         className="duration-300"
       />
       <path
@@ -141,7 +141,7 @@ function RepeatIcon({ active }: { active: boolean }) {
           height="9.49351"
           rx="2"
           stroke={active ? "#42AB47" : "#8F8F8F"}
-          stroke-width="2"
+          strokeWidth="2"
           className="duration-300"
         />
       </mask>
