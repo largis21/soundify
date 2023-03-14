@@ -6,6 +6,7 @@ import cors from "cors"
 
 import userRoute from "./routes/user";
 import loginRoute from "./routes/login";
+import playlistRoute from "./routes/playlist"
 
 const app = express();
 console.log(process.env.FRONTEND_URL)
@@ -18,5 +19,6 @@ app.use(cookieParser())
 
 app.use("/login", loginRoute);
 app.use("/user", userRoute);
+app.use("/playlist", playlistRoute);
 
 app.listen(8080);

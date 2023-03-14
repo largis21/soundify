@@ -4,6 +4,7 @@ import SHA256 from "crypto-js/sha256";
 import { z } from "zod";
 import { createSigner } from "fast-jwt";
 import { getAuth } from "../auth";
+import { getUser } from "../lib/getUser";
 
 const router = express.Router();
 
@@ -18,24 +19,16 @@ router.post("/", async (
 ) => {
   const auth = getAuth(req)
   if (auth.user_id) {
-    const user = await prismaclient.user.findFirst({
-      where: {
-       user_id: auth.user_id
-      },
-      include: {
-        playlist: true
-      }
-    })
+    const user = await getUser({ userId: auth.user_id })
 
     if (!user) {
-      res.status(500).json({ error: "Internal server error"})
-      return 
+      res.status(500).json({ error: "Internal server error" })
+      return
     }
 
-    res.status(200).json({
-      username: user.username,
-      user_id: user.user_id
-    })
+    delete user.password
+
+    res.status(200).json(user)
     return
   }
 
@@ -46,12 +39,7 @@ router.post("/", async (
     return
   };
 
-  const user = await prismaclient.user.findFirst({
-    where: {
-       username: parsedBody.data.username
-    }
-  })
-
+  const user = await getUser({ username: parsedBody.data.username }) 
   if (!user) {
     res.status(401).json({ error: "Incorrect username or password" });
     return;
@@ -83,10 +71,9 @@ router.post("/", async (
     expires: new Date(tokenExpires) 
   })
 
-  res.status(200).json({ 
-    user_id: user.user_id,
-    username: user.username
-  })
+  delete user.password
+
+  res.status(200).json(user)
 });
 
 export default router;
