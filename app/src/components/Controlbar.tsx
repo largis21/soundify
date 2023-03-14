@@ -1,22 +1,53 @@
 import { useEffect, useState } from "react";
+import { PlayingOptionsType } from "utils/types";
 
-export default function Controlbar() {
+export default function Controlbar({
+  playingOptions,
+  setPlayingOptions
+}: {
+  playingOptions: PlayingOptionsType,
+  setPlayingOptions: (newPOpts: PlayingOptionsType) => any
+}) {
   return (
     <div className="fixed bottom-0 w-screen h-20 bg-neutral-800 flex justify-center border-t-[1px] border-neutral-700 select-none">
       <div className="flex flex-col items-center justify-evenly">
-        <MainControls />
-        <DurationSlider />
+        <MainControls 
+          playingOptions={playingOptions}
+          setPlayingOptions={setPlayingOptions}
+        />
+        <DurationSlider 
+          playingOptions={playingOptions}
+          setPlayingOptions={setPlayingOptions}
+        />
       </div>
     </div>
   );
 }
 
-function MainControls() {
-  const [isPaused, setPaused] = useState(true);
+function MainControls({
+  playingOptions,
+  setPlayingOptions
+}: {
+  playingOptions: PlayingOptionsType,
+  setPlayingOptions: (newPOpts: PlayingOptionsType) => any
+}) {
   const [mouseDown, setMouseDown] = useState(false);
 
   const [shuffleEnabled, setShuffleEnabled] = useState(false);
   const [repeatEnabled, setRepeatEnabled] = useState(false);
+
+  function handlePauseClicked() {
+    const playingOptionsCopy = {...playingOptions}
+
+    if (playingOptionsCopy.isPlaying) {
+      playingOptionsCopy.isPlaying = false
+      playingOptionsCopy.currentTime = 
+        playingOptionsCopy.audioRef.current.currentTime || 0
+    } else {
+      playingOptionsCopy.isPlaying = true
+    }
+    setPlayingOptions(playingOptionsCopy)
+  }
 
   return (
     <div className="flex items-center [&>*]:mx-4">
@@ -30,9 +61,7 @@ function MainControls() {
         className={`${
           mouseDown && "scale-[0.95]"
         } bg-white w-8 p-2 rounded-full aspect-square flex justify-center items-center focus:outline-none duration-75`}
-        onClick={() => {
-          setPaused(!isPaused);
-        }}
+        onClick={handlePauseClicked}
         onMouseDown={() => {
           setMouseDown(true);
         }}
@@ -43,7 +72,7 @@ function MainControls() {
           setMouseDown(false);
         }}
       >
-        {isPaused ? (
+        {playingOptions.isPlaying ? (
           <img src={"../public/icons/pause.svg"} />
         ) : (
           <img src={"../public/icons/play.svg"} />
@@ -59,20 +88,36 @@ function MainControls() {
   );
 }
 
-function DurationSlider() {
+function DurationSlider({
+  playingOptions,
+  setPlayingOptions
+}: {
+  playingOptions: PlayingOptionsType,
+  setPlayingOptions: (newPOpts: PlayingOptionsType) => any
+}) {
   const [progressValue, setProgressValue] = useState(0);
+
+  useEffect(() => {
+    if (!playingOptions.audioRef) return
+    playingOptions.audioRef.current.ontimeupdate = () => {
+      const currentTime = playingOptions.audioRef.current.currentTime
+      const songLength = playingOptions.audioRef.current.duration
+      const progress = (currentTime  * 100) / songLength
+      setProgressValue(parseFloat(progress.toFixed(2)))
+    }
+  }, [playingOptions])
 
   return (
     <div className="flex items-center">
-      <p className="text-neutral-400 text-xs w-3">{progressValue}</p>
+      <p className="text-neutral-400 text-xs w-7">{progressValue}</p>
       <input
         type={"range"}
-        step="0.1"
+        step="0.01"
         className="mx-4 form-range w-96 bg-neutral-600 rounded-full h-[.35rem] focus:outline-none"
         value={progressValue}
         onChange={(e) => setProgressValue(parseFloat(e.target.value))}
       />
-      <p className="text-neutral-400 text-xs w-3">100</p>
+      <p className="text-neutral-400 text-xs w-7">100</p>
     </div>
   );
 }

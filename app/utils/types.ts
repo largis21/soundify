@@ -26,7 +26,6 @@ export const UserData = z.object({
   playlists: PlaylistData.array()
 })
 
-
 export type UserDataType = z.infer<typeof UserData>
 
 export const UserLoginInfo = z.object({
@@ -48,7 +47,8 @@ export type QueueType = z.infer<typeof Queue>
 
 export const PlayingOptions = z.object({
   isPlaying: z.boolean(),
-  currentTime: z.number(), 
+  currentTime: z.number(),
+  audioRef: z.any(),
   queue: Queue
 })
 
