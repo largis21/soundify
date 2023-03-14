@@ -1,5 +1,4 @@
-import { Routes, UserDataType } from "utils/types";
-import { PlaylistType } from "./Playlist";
+import { Routes, UserDataType, PlaylistDataType } from "utils/types";
 
 const sidebarItems: {
     imgSrc: string,
@@ -21,7 +20,7 @@ export default function Sidebar({
 }: { 
   route: Routes,
   setRoute: (newRoute: Routes) => any,
-  setCurrentPlaylist: (playlist: PlaylistType) => any,
+  setCurrentPlaylist: (playlist: PlaylistDataType) => any,
   playlists: UserDataType["playlists"]
 }) {
   return (

@@ -46,6 +46,8 @@ export default function App() {
     sendLoginRequest({username: "", password: ""}, true)
   }, [])
 
+  // test
+
   if (user) {
     return (
       <MainPage user={user}/>
