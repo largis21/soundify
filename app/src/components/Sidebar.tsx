@@ -28,6 +28,7 @@ export default function Sidebar({
       <ul className="mt-[25px]">
         {sidebarItems.map((item) => (
           <SidebarItem 
+            key={item.route}
             imgSrc={item.imgSrc}
             itemText={item.itemText}
             active={route === item.route}
@@ -44,6 +45,7 @@ export default function Sidebar({
                 setCurrentPlaylist(playlist)
                 setRoute("playlist")
               }}
+              key={playlist.playlist_id}
             >
               <p className="font-bold text-sm">{playlist.playlist_name}</p>
             </li>
