@@ -1,6 +1,6 @@
 import { PlayingOptions } from "@/pages/mainPage";
-import { useEffect, useState } from "react";
-import { PlayingOptionsType } from "utils/types";
+import { ChangeEvent, useEffect, useState } from "react";
+import { formatTime } from "../../utils/formatTime"
 
 export default function Controlbar({
   playingOptions,
@@ -34,9 +34,6 @@ function MainControls({
 }) {
   const [mouseDown, setMouseDown] = useState(false);
 
-  const [shuffleEnabled, setShuffleEnabled] = useState(false);
-  const [repeatEnabled, setRepeatEnabled] = useState(false);
-
   function handlePauseClicked() {
     const playingOptionsClone = playingOptions.clone()
     if (!playingOptionsClone.audioRef) return
@@ -51,10 +48,22 @@ function MainControls({
     setPlayingOptions(playingOptionsClone)
   }
 
+  function toggleShuffle() {
+    const playingOptionsClone = playingOptions.clone()
+    playingOptionsClone.shuffle = !playingOptionsClone.shuffle
+    setPlayingOptions(playingOptionsClone)
+  }
+
+  function toggleRepeat() {
+    const playingOptionsClone = playingOptions.clone()
+    playingOptionsClone.repeat = !playingOptionsClone.repeat
+    setPlayingOptions(playingOptionsClone)
+  }
+
   return (
     <div className="flex items-center [&>*]:mx-4">
-      <button onClick={() => setShuffleEnabled(!shuffleEnabled)}>
-        <ShuffleIcon active={shuffleEnabled} />
+      <button onClick={toggleShuffle}>
+        <ShuffleIcon active={playingOptions.shuffle} />
       </button>
       <button>
        <img src="../public/icons/nextprev.svg" alt="Previous song" />
@@ -83,8 +92,8 @@ function MainControls({
       <button>
         <img src="../public/icons/nextprev.svg" alt="Next song" className="rotate-180" />
       </button>
-      <button onClick={() => setRepeatEnabled(!repeatEnabled)}>
-        <RepeatIcon active={repeatEnabled} />
+      <button onClick={toggleRepeat}>
+        <RepeatIcon active={playingOptions.repeat} />
       </button>
     </div>
   );
@@ -104,27 +113,38 @@ function DurationSlider({
     playingOptions.audioRef.ontimeupdate = () => {
       if (!playingOptions.audioRef) return
       const currentTime = playingOptions.audioRef.currentTime
-      const songLength = playingOptions.audioRef.duration
-      if (currentTime === 0 || songLength === 0) {
-        setProgressValue(0)
-      } else {
-        const progress = (currentTime  * 100) / songLength
-        setProgressValue(parseFloat(progress.toFixed(2)))
-      }
+      setProgressValue(currentTime)
     }
   }, [playingOptions])
 
+  function handleSliderInput(e: ChangeEvent<HTMLInputElement>) {
+    const parsedNewValue = parseFloat(e.target.value)
+    setProgressValue(parseFloat(e.target.value))
+
+    const playingOptionsClone = playingOptions.clone()
+    playingOptionsClone.currentTime = parsedNewValue
+    setPlayingOptions(playingOptionsClone)
+  }
+
   return (
     <div className="flex items-center">
-      <p className="text-neutral-400 text-xs w-7">{progressValue}</p>
+      <p className="text-neutral-400 text-xs w-7">{formatTime(progressValue)}</p>
       <input
         type={"range"}
         step="0.01"
+        disabled={playingOptions.queue.length === 0}
+        max={playingOptions.audioRef && playingOptions.audioRef.duration || 0}
         className="mx-4 form-range w-96 bg-neutral-600 rounded-full h-[.35rem] focus:outline-none"
         value={progressValue}
-        onChange={(e) => setProgressValue(parseFloat(e.target.value))}
+        onChange={handleSliderInput}
       />
-      <p className="text-neutral-400 text-xs w-7">100</p>
+      <p className="text-neutral-400 text-xs w-7">
+        { 
+          playingOptions.queue.length !== 0 && playingOptions.audioRef
+            ? formatTime(playingOptions.audioRef.duration)
+            : ""
+        }
+      </p>
     </div>
   );
 }
