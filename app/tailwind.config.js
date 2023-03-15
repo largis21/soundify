@@ -7,6 +7,9 @@ module.exports = {
       colors: {
         soundifyGreen: "#42AB47",
       },
+      filter: {
+        "gray": "grayscale(1)"
+      }
     },
   },
   plugins: [],

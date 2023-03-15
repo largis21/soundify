@@ -29,6 +29,7 @@ export default function PlaylistPage({
         <button
           className="rounded-full aspect-square m-5 
             bg-soundifyGreen w-10 flex justify-center items-center focus:outline-none"
+          onClick={() => playSongFromPlaylist(0)}
         >
           <img src={"../public/icons/play.svg"} alt="Play playlist" />
         </button>

@@ -58,6 +58,12 @@ function MainControls({
     setPlayingOptions(playingOptionsClone)
   }
 
+  function skipSong() {
+    const playingOptionsClone = playingOptions.clone()
+    playingOptionsClone.skipSong()
+    setPlayingOptions(playingOptionsClone)
+  }
+
   return (
     <div className="flex items-center [&>*]:mx-4">
       <button onClick={toggleShuffle}>
@@ -69,6 +75,7 @@ function MainControls({
       <button
         className="bg-white w-8 p-2 rounded-full aspect-square flex justify-center 
           items-center focus:outline-none duration-75"
+        disabled={playingOptions.queue.length === 0}
         onClick={handlePauseClicked}
       >
         {playingOptions.isPlaying ? (
@@ -77,7 +84,9 @@ function MainControls({
           <img src={"../public/icons/play.svg"} />
         )}
       </button>
-      <button>
+      <button
+        onClick={skipSong}
+      >
         <img src="../public/icons/nextprev.svg" alt="Next song" className="rotate-180" />
       </button>
       <button onClick={toggleRepeat}>
@@ -116,13 +125,20 @@ function DurationSlider({
 
   return (
     <div className="flex items-center">
-      <p className="text-neutral-400 text-xs w-7">{formatTime(progressValue)}</p>
+      <p className="text-neutral-400 text-xs w-7">
+        {
+          progressValue 
+            ? formatTime(progressValue)
+            : "‎"
+        }
+      </p>
       <input
         type={"range"}
         step="0.01"
         disabled={playingOptions.queue.length === 0}
         max={playingOptions.audioRef && playingOptions.audioRef.duration || 0}
-        className="mx-4 form-range w-96 bg-neutral-600 rounded-full h-[.35rem] focus:outline-none"
+        className="mx-4 form-range w-96 bg-neutral-600 rounded-full h-[.35rem] focus:outline-none
+          filter -hue-rotate-[75deg]"
         value={progressValue}
         onChange={handleSliderInput}
       />
@@ -130,7 +146,7 @@ function DurationSlider({
         { 
           playingOptions.queue.length !== 0 && playingOptions.audioRef
             ? formatTime(playingOptions.audioRef.duration)
-            : ""
+            : "‎"
         }
       </p>
     </div>
