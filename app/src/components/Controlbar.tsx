@@ -1,12 +1,13 @@
+import { PlayingOptions } from "@/pages/mainPage";
 import { useEffect, useState } from "react";
 import { PlayingOptionsType } from "utils/types";
 
 export default function Controlbar({
   playingOptions,
-  setPlayingOptions
+  setPlayingOptions,
 }: {
-  playingOptions: PlayingOptionsType,
-  setPlayingOptions: (newPOpts: PlayingOptionsType) => any
+  playingOptions: PlayingOptions,
+  setPlayingOptions: (newPOpts: PlayingOptions) => any,
 }) {
   return (
     <div className="fixed bottom-0 w-screen h-20 bg-neutral-800 flex justify-center border-t-[1px] border-neutral-700 select-none">
@@ -26,10 +27,10 @@ export default function Controlbar({
 
 function MainControls({
   playingOptions,
-  setPlayingOptions
+  setPlayingOptions,
 }: {
-  playingOptions: PlayingOptionsType,
-  setPlayingOptions: (newPOpts: PlayingOptionsType) => any
+  playingOptions: PlayingOptions,
+  setPlayingOptions: (newPOpts: PlayingOptions) => any,
 }) {
   const [mouseDown, setMouseDown] = useState(false);
 
@@ -37,16 +38,17 @@ function MainControls({
   const [repeatEnabled, setRepeatEnabled] = useState(false);
 
   function handlePauseClicked() {
-    const playingOptionsCopy = {...playingOptions}
+    const playingOptionsClone = playingOptions.clone()
+    if (!playingOptionsClone.audioRef) return
 
-    if (playingOptionsCopy.isPlaying) {
-      playingOptionsCopy.isPlaying = false
-      playingOptionsCopy.currentTime = 
-        playingOptionsCopy.audioRef.current.currentTime || 0
+    if (playingOptions.isPlaying) {
+      playingOptionsClone.isPlaying = false
+      playingOptionsClone.currentTime = 
+        playingOptionsClone.audioRef.currentTime || 0
     } else {
-      playingOptionsCopy.isPlaying = true
+      playingOptionsClone.isPlaying = true
     }
-    setPlayingOptions(playingOptionsCopy)
+    setPlayingOptions(playingOptionsClone)
   }
 
   return (
@@ -92,16 +94,17 @@ function DurationSlider({
   playingOptions,
   setPlayingOptions
 }: {
-  playingOptions: PlayingOptionsType,
-  setPlayingOptions: (newPOpts: PlayingOptionsType) => any
+  playingOptions: PlayingOptions,
+  setPlayingOptions: (newPOpts: PlayingOptions) => any,
 }) {
   const [progressValue, setProgressValue] = useState(0);
 
   useEffect(() => {
     if (!playingOptions.audioRef) return
-    playingOptions.audioRef.current.ontimeupdate = () => {
-      const currentTime = playingOptions.audioRef.current.currentTime
-      const songLength = playingOptions.audioRef.current.duration
+    playingOptions.audioRef.ontimeupdate = () => {
+      if (!playingOptions.audioRef) return
+      const currentTime = playingOptions.audioRef.currentTime
+      const songLength = playingOptions.audioRef.duration
       const progress = (currentTime  * 100) / songLength
       setProgressValue(parseFloat(progress.toFixed(2)))
     }

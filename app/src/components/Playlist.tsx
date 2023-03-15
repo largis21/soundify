@@ -1,3 +1,4 @@
+import { PlayingOptions } from "@/pages/mainPage"
 import { PlayingOptionsType, PlaylistDataType, SongDataType } from "utils/types"
 
 export default function PlaylistPage({ 
@@ -6,19 +7,15 @@ export default function PlaylistPage({
   setPlayingOptions
 }: { 
   playlist: PlaylistDataType,
-  playingOptions: PlayingOptionsType,
-  setPlayingOptions: (newPOpt: PlayingOptionsType) => any
+  playingOptions: PlayingOptions,
+  setPlayingOptions: (newPOpt: PlayingOptions) => any
 }) {
-  function playSong(songIndex: number) {
-    const playingOptionsCopy = {...playingOptions}
-
-    playingOptionsCopy.currentTime =  0
-    playingOptionsCopy.isPlaying = true
-    playingOptionsCopy.queue.currentSongIndex = 0
-    playingOptionsCopy.queue.playingFromPlaylist = playlist.playlist_id
-    playingOptionsCopy.queue.songs = [...playlist.songs.slice(songIndex)]
-
-    setPlayingOptions(playingOptionsCopy)
+  function playSong(song: SongDataType) {
+    const playingOptionsClone = playingOptions.clone()
+    playingOptionsClone.queue = [song]
+    playingOptionsClone.currentTime = 0
+    playingOptionsClone.isPlaying = true
+    setPlayingOptions(playingOptionsClone)
   }
 
   return (
@@ -42,7 +39,7 @@ export default function PlaylistPage({
               <PlaylistSong
                 songIndex={index}
                 song={song}
-                playSong={playSong}
+                playSong={() => playSong(song)}
               />
             </li>
           ))

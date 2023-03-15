@@ -2,57 +2,85 @@ import Controlbar from "../components/Controlbar";
 import Sidebar from "../components/Sidebar";
 import Landing from "../components/Landing";
 import { Routes, UserDataType, PlaylistDataType, QueueType, PlayingOptionsType, SongDataType } from "../../utils/types";
-import { useEffect, useRef, useState } from "react";
+import React, { MutableRefObject, RefObject, useEffect, useRef, useState } from "react";
 import PlaylistPage from "@/components/Playlist";
 import { API_URL } from "../../ENV";
 
-const defaultPlayingOpt: PlayingOptionsType = {
-  isPlaying: false,
-  currentTime: 0,
-  audioRef: null,
-  queue: {
-    currentSongIndex: 0,
-    playingFromPlaylist: 0,
-    songs: []
+export class PlayingOptions {
+  isPlaying: boolean
+  currentTime: number
+  shuffle: boolean
+  repeat: boolean
+  audioRef: HTMLAudioElement | null
+  queue: SongDataType[]
+  prevSong: SongDataType["song_id"] | null
+
+  constructor() {
+    this.isPlaying = false
+    this.currentTime = 0
+    this.shuffle = false
+    this.repeat = false
+    this.audioRef = null
+    this.queue = []
+    this.prevSong = null
+  }
+
+  addToQueue(song: SongDataType) {
+    this.queue.push(song)
+  }
+
+  skipSong() {
+    if (
+      this.queue.length === 0 ||
+      this.queue.length === 1
+    ) {
+      this.queue = []
+      return
+    }
+
+    this.queue.slice(1)
+    this.currentTime = 0
+  }
+
+  clone(): this {
+    return Object.assign(Object.create(Object.getPrototypeOf(this)), this)
   }
 }
 
 export default function MainPage({ user }: { user: UserDataType }) {
   const [route, setRoute] = useState<Routes>("home")
   const [currentPlaylist, setCurrentPlaylist] = useState<PlaylistDataType | null>(null)
-  const [playingOptions, setPlayingOptions] = 
-    useState<PlayingOptionsType>(defaultPlayingOpt)
-  const [prevSong, setPrevSong] = useState<SongDataType["song_id"] | null>(null)
+  const [playingOptions, setPlayingOptions] = useState(new PlayingOptions())
 
   const audioRef = useRef<HTMLAudioElement | null>(null)
 
   useEffect(() => {
-    if (!audioRef.current) return
+    if (!playingOptions.audioRef) return
     
     if (
       playingOptions.isPlaying && 
-      playingOptions.queue.songs.length !== 0
+      playingOptions.queue.length !== 0
     ) {
-      const newSong = playingOptions.queue.songs[playingOptions.queue.currentSongIndex]
-      const isSameSongAsLast = 
-        newSong.song_id === prevSong
+      const newSong = playingOptions.queue[0]
+      const isSameSongAsLast = newSong.song_id === playingOptions.prevSong
+
       if (!isSameSongAsLast) {
-        audioRef.current.src = 
-          `${API_URL}/song/${newSong.song_id}`
-        setPrevSong(newSong.song_id)
+        playingOptions.audioRef.src = `${API_URL}/song/${newSong.song_id}`
+        playingOptions.prevSong = newSong.song_id
       }
-      audioRef.current.currentTime = playingOptions.currentTime
-      audioRef.current.play()
+
+      playingOptions.audioRef.currentTime = playingOptions.currentTime
+      playingOptions.audioRef.play()
     } else {
-      audioRef.current.pause()
+      playingOptions.audioRef.pause()
     }
   }, [playingOptions])
 
   useEffect(() => {
     if (!audioRef.current) return
-    const playingOptionsCopy = {...playingOptions}
-    playingOptionsCopy.audioRef = audioRef
-    setPlayingOptions(playingOptionsCopy)
+    const playingOptionsClone = playingOptions.clone()
+    playingOptionsClone.audioRef = audioRef.current
+    setPlayingOptions(playingOptionsClone)
   }, [audioRef.current])
 
   return (
@@ -96,8 +124,8 @@ function RouteSwitcher({
   route: Routes,
   user: UserDataType,
   currentPlaylist: PlaylistDataType | null,
-  playingOptions: PlayingOptionsType
-  setPlayingOptions: (newPOpt: PlayingOptionsType) => any
+  playingOptions: PlayingOptions
+  setPlayingOptions: (newPOpt: PlayingOptions) => any
 }) {
   switch (route) {
     case "home":
