@@ -102,8 +102,12 @@ function DurationSlider({
     playingOptions.audioRef.current.ontimeupdate = () => {
       const currentTime = playingOptions.audioRef.current.currentTime
       const songLength = playingOptions.audioRef.current.duration
-      const progress = (currentTime  * 100) / songLength
-      setProgressValue(parseFloat(progress.toFixed(2)))
+      if (currentTime === 0 || songLength === 0) {
+        setProgressValue(0)
+      } else {
+        const progress = (currentTime  * 100) / songLength
+        setProgressValue(parseFloat(progress.toFixed(2)))
+      }
     }
   }, [playingOptions])
 
