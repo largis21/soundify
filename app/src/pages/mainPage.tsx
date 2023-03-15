@@ -1,8 +1,8 @@
 import Controlbar from "../components/Controlbar";
 import Sidebar from "../components/Sidebar";
 import Landing from "../components/Landing";
-import { Routes, UserDataType, PlaylistDataType, QueueType, PlayingOptionsType, SongDataType } from "../../utils/types";
-import React, { MutableRefObject, RefObject, useEffect, useRef, useState } from "react";
+import { Routes, UserDataType, PlaylistDataType, SongDataType } from "../../utils/types";
+import { useEffect, useRef, useState } from "react";
 import PlaylistPage from "@/components/Playlist";
 import { API_URL } from "../../ENV";
 

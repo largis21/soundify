@@ -46,13 +46,59 @@ router.get("/:id", async (
 
   let songBlob;
   try {
-    songBlob = readFileSync(path.resolve(__dirname, `../../songs/${song.song_id}.mp3`));
+    songBlob = readFileSync(path.resolve(__dirname, `../../songs/songs/${song.song_id}.mp3`));
   } catch {
     res.status(404).json({ error: "Could not find song" })
     return
   }
 
   res.status(200).send(songBlob)
+});
+
+router.get("/cover/:id", async (
+  req: Request, 
+  res: Response
+) => {
+  const params = req.params
+  const id = params["id"]
+  if (!id) {
+    res.status(400).json({ error: "Bad request" });
+    return
+  }
+
+  const parsedId = reqId.safeParse(id)
+
+  if (!parsedId.success) {
+    res.status(400).json({ error: "Bad request" });
+    return
+  }
+
+  const auth = getAuth(req)
+  if (!auth.user_id) {
+    res.status(401).json({ error: "Unauthenticated" })
+    return
+  }
+
+  const song = await prismaclient.song.findUnique({
+    where: {
+      song_id: parsedId.data
+    }
+  })
+
+  if (!song) {
+    res.status(404).json({ error: "Could not find song" })
+    return
+  }
+
+  let coverFile;
+  try {
+    coverFile = readFileSync(path.resolve(__dirname, `../../songs/cover/${song.song_id}.jpg`));
+  } catch {
+    res.status(404).json({ error: "Could not find song" })
+    return
+  }
+
+  res.status(200).send(coverFile)
 });
 
 export default router;

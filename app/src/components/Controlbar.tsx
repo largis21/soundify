@@ -32,8 +32,6 @@ function MainControls({
   playingOptions: PlayingOptions,
   setPlayingOptions: (newPOpts: PlayingOptions) => any,
 }) {
-  const [mouseDown, setMouseDown] = useState(false);
-
   function handlePauseClicked() {
     const playingOptionsClone = playingOptions.clone()
     if (!playingOptionsClone.audioRef) return
@@ -69,19 +67,9 @@ function MainControls({
        <img src="../public/icons/nextprev.svg" alt="Previous song" />
       </button>
       <button
-        className={`${
-          mouseDown && "scale-[0.95]"
-        } bg-white w-8 p-2 rounded-full aspect-square flex justify-center items-center focus:outline-none duration-75`}
+        className="bg-white w-8 p-2 rounded-full aspect-square flex justify-center 
+          items-center focus:outline-none duration-75"
         onClick={handlePauseClicked}
-        onMouseDown={() => {
-          setMouseDown(true);
-        }}
-        onMouseUp={() => {
-          setMouseDown(false);
-        }}
-        onMouseLeave={() => {
-          setMouseDown(false);
-        }}
       >
         {playingOptions.isPlaying ? (
           <img src={"../public/icons/pause.svg"} />

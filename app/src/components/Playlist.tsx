@@ -10,9 +10,9 @@ export default function PlaylistPage({
   playingOptions: PlayingOptions,
   setPlayingOptions: (newPOpt: PlayingOptions) => any
 }) {
-  function playSong(song: SongDataType) {
+  function playSongFromPlaylist(songIndex: number) {
     const playingOptionsClone = playingOptions.clone()
-    playingOptionsClone.queue = [song]
+    playingOptionsClone.queue = playlist.songs.slice(songIndex)
     playingOptionsClone.currentTime = 0
     playingOptionsClone.isPlaying = true
     setPlayingOptions(playingOptionsClone)
@@ -39,7 +39,7 @@ export default function PlaylistPage({
               <PlaylistSong
                 songIndex={index}
                 song={song}
-                playSong={() => playSong(song)}
+                playSong={() => playSongFromPlaylist(index)}
               />
             </li>
           ))
@@ -75,7 +75,7 @@ function PlaylistSong({
 
       <img 
         //src={imgPath || "../public/icons/cd_placeholder.svg"}
-        src={"../public/icons/cd_placeholder.svg"}
+        src={`http://localhost:8080/song/cover/${song.song_id}` || "../public/icons/cd_placeholder.svg"}
         height={40}
         width={40}
         alt="Playlist cover" 

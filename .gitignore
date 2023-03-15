@@ -25,7 +25,6 @@ app/yarn.lock
 app/.vscode
 
 /backend/node_modules
-/backend/songs
 /backend/erd
 /backend/dist/
 
