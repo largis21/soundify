@@ -38,7 +38,11 @@ export class PlayingOptions {
       return
     }
 
-    this.queue.slice(1)
+    this.queue = this.queue.slice(1)
+    this.currentTime = 0
+  }
+
+  skipBackSong() {
     this.currentTime = 0
   }
 
@@ -54,8 +58,16 @@ export default function MainPage({ user }: { user: UserDataType }) {
 
   const audioRef = useRef<HTMLAudioElement | null>(null)
 
+  function handleSongEnded() {
+    const playingOptionsClone = playingOptions.clone()
+    playingOptionsClone.skipSong()
+    setPlayingOptions(playingOptionsClone)
+  }
+
   useEffect(() => {
     if (!playingOptions.audioRef) return
+
+    console.log(playingOptions)
     
     if (
       playingOptions.isPlaying && 
@@ -88,6 +100,7 @@ export default function MainPage({ user }: { user: UserDataType }) {
       <audio 
         src=""
         ref={audioRef}
+        onEnded={handleSongEnded}
       />
       <div className="flex flex-col min-h-screen max-h-screen">
         <div className="flex flex-row flex-1">

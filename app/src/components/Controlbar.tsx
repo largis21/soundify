@@ -58,6 +58,12 @@ function MainControls({
     setPlayingOptions(playingOptionsClone)
   }
 
+  function prevSong() {
+    const playingOptionsClone = playingOptions.clone()
+    playingOptionsClone.skipBackSong()
+    setPlayingOptions(playingOptionsClone)
+  }
+
   function skipSong() {
     const playingOptionsClone = playingOptions.clone()
     playingOptionsClone.skipSong()
@@ -70,7 +76,11 @@ function MainControls({
         <ShuffleIcon active={playingOptions.shuffle} />
       </button>
       <button>
-       <img src="../public/icons/nextprev.svg" alt="Previous song" />
+       <img 
+        src="../public/icons/nextprev.svg" 
+        alt="Previous song" 
+        onClick={prevSong}
+      />
       </button>
       <button
         className="bg-white w-8 p-2 rounded-full aspect-square flex justify-center 
@@ -81,7 +91,7 @@ function MainControls({
         {playingOptions.isPlaying ? (
           <img src={"../public/icons/pause.svg"} />
         ) : (
-          <img src={"../public/icons/play.svg"} />
+          <img width={11} className="translate-x-[1px]" src={"../public/icons/play.svg"} />
         )}
       </button>
       <button
@@ -111,6 +121,11 @@ function DurationSlider({
       if (!playingOptions.audioRef) return
       const currentTime = playingOptions.audioRef.currentTime
       setProgressValue(currentTime)
+    }
+
+    playingOptions.audioRef.onended = () => {
+      if (!playingOptions.audioRef) return
+
     }
   }, [playingOptions])
 

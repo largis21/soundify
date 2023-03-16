@@ -19,13 +19,13 @@ export default function PlaylistPage({
   }
 
   return (
-    <div className="bg-neutral-900 flex-grow overflow-x-hidden">
-    <header className="bg-neutral-800 py-10">
-      <h2 className="text-white text-5xl font-bold ml-5">
-        {playlist.playlist_name}
-      </h2>
-    </header>
-      <div className="flex flex-col overflow-auto">
+    <div className="bg-neutral-900 flex flex-col flex-grow">
+      <header className="bg-neutral-800 py-10">
+        <h2 className="text-white text-5xl font-bold ml-5">
+          {playlist.playlist_name}
+        </h2>
+      </header>
+      <div className="flex flex-col flex-grow">
         <button
           className="rounded-full aspect-square m-5 
             bg-soundifyGreen w-10 flex justify-center items-center focus:outline-none"
@@ -34,17 +34,17 @@ export default function PlaylistPage({
           <img src={"../public/icons/play.svg"} alt="Play playlist" />
         </button>
         <ul className="mx-3 pt-2 border-t-neutral-600 border-t-[1px]">
-        {
-          playlist.songs.map((song, index) => (
-            <li key={song.song_id}>
-              <PlaylistSong
-                songIndex={index}
-                song={song}
-                playSong={() => playSongFromPlaylist(index)}
-              />
-            </li>
-          ))
-        }
+          {
+            playlist.songs.map((song, index) => (
+              <li key={song.song_id}>
+                <PlaylistSong
+                  songIndex={index}
+                  song={song}
+                  playSong={() => playSongFromPlaylist(index)}
+                />
+              </li>
+            ))
+          }
         </ul>
       </div>
     </div>
