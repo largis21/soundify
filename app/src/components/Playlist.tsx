@@ -19,13 +19,13 @@ export default function PlaylistPage({
   }
 
   return (
-    <div className="bg-neutral-900 flex flex-col flex-grow">
+    <div className="bg-neutral-900 flex flex-col flex-grow h-fill overflow-y-scroll">
       <header className="bg-neutral-800 py-10">
         <h2 className="text-white text-5xl font-bold ml-5">
           {playlist.playlist_name}
         </h2>
       </header>
-      <div className="flex flex-col flex-grow">
+      <div className="flex flex-col">
         <button
           className="rounded-full aspect-square m-5 
             bg-soundifyGreen w-10 flex justify-center items-center focus:outline-none"

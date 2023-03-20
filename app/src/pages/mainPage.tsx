@@ -13,6 +13,7 @@ export class PlayingOptions {
   repeat: boolean
   audioRef: HTMLAudioElement | null
   queue: SongDataType[]
+  unShuffledQueue: SongDataType[]
   prevSong: SongDataType["song_id"] | null
 
   constructor() {
@@ -22,6 +23,7 @@ export class PlayingOptions {
     this.repeat = false
     this.audioRef = null
     this.queue = []
+    this.unShuffledQueue = []
     this.prevSong = null
   }
 
@@ -44,6 +46,26 @@ export class PlayingOptions {
 
   skipBackSong() {
     this.currentTime = 0
+  }
+
+  shuffleQueue() {
+    if (this.queue.length === 0) return
+
+    this.unShuffledQueue = this.queue
+
+    let currentIndex = this.queue.length, randomIndex;
+    console.log(currentIndex)
+
+    while (currentIndex != 0) {
+      randomIndex = Math.floor(Math.random() * currentIndex);
+      currentIndex--;
+
+      [this.queue[currentIndex], this.queue[randomIndex]] = 
+      [this.queue[randomIndex], this.queue[currentIndex]];
+    }
+  }
+
+  unShuffleQueue() {
   }
 
   clone(): this {

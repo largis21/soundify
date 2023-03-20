@@ -9,6 +9,9 @@ module.exports = {
       },
       filter: {
         "gray": "grayscale(1)"
+      },
+      height: {
+        "fill": "calc(100vh - 5rem)"
       }
     },
   },
