@@ -3,8 +3,8 @@ import Sidebar from "../components/Sidebar";
 import Landing from "../components/Landing";
 import { Routes, UserDataType, PlaylistDataType, SongDataType } from "../../utils/types";
 import { useEffect, useRef, useState } from "react";
-import PlaylistPage from "@/components/Playlist";
-import { API_URL } from "../../ENV";
+import PlaylistPage from "../components/Playlist";
+import { UnfishedPage } from "../components/UnfinishedPage";
 
 export class PlayingOptions {
   isPlaying: boolean
@@ -50,22 +50,26 @@ export class PlayingOptions {
 
   shuffleQueue() {
     if (this.queue.length === 0) return
+    if (!this.audioRef) return
+
+    if (this.unShuffledQueue.length !== 0) {
+      this.queue = this.unShuffledQueue
+    }
 
     this.unShuffledQueue = this.queue
 
-    let currentIndex = this.queue.length, randomIndex;
-    console.log(currentIndex)
-
-    while (currentIndex != 0) {
-      randomIndex = Math.floor(Math.random() * currentIndex);
-      currentIndex--;
-
-      [this.queue[currentIndex], this.queue[randomIndex]] = 
-      [this.queue[randomIndex], this.queue[currentIndex]];
-    }
+    this.queue = [this.queue[0], ...this.queue.slice(1).sort(() => Math.random() - 0.5)];
+    this.currentTime = this.audioRef.currentTime
+    this.shuffle = true
   }
 
   unShuffleQueue() {
+    if (this.unShuffledQueue.length === 0) return
+    if (!this.audioRef) return
+
+    this.currentTime = this.audioRef.currentTime
+    this.queue = [this.queue[0], ...this.unShuffledQueue.slice(1)]
+    this.shuffle = false
   }
 
   clone(): this {
@@ -88,8 +92,6 @@ export default function MainPage({ user }: { user: UserDataType }) {
 
   useEffect(() => {
     if (!playingOptions.audioRef) return
-
-    console.log(playingOptions)
     
     if (
       playingOptions.isPlaying && 
@@ -99,12 +101,16 @@ export default function MainPage({ user }: { user: UserDataType }) {
       const isSameSongAsLast = newSong.song_id === playingOptions.prevSong
 
       if (!isSameSongAsLast) {
-        playingOptions.audioRef.src = `${API_URL}/song/${newSong.song_id}`
+        playingOptions.audioRef.src = `${import.meta.env.VITE_API_URL}/song/${newSong.song_id}`
         playingOptions.prevSong = newSong.song_id
       }
 
       playingOptions.audioRef.currentTime = playingOptions.currentTime
       playingOptions.audioRef.play()
+
+      navigator.mediaSession.metadata = new MediaMetadata({
+        title: playingOptions.queue[0].song_name
+      })
     } else {
       playingOptions.audioRef.pause()
     }
@@ -179,7 +185,7 @@ function RouteSwitcher({
       } else {
         return <></>
       }
+    default:
+      return <UnfishedPage />
   }
-
-  return <></>
 }

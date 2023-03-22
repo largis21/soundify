@@ -66,9 +66,9 @@ router.post("/", async (
   })
 
   res.cookie("soundify_token", userToken, {
-    httpOnly: true,
-    secure: false,
-    expires: new Date(tokenExpires) 
+    httpOnly: false,
+    secure: true,
+    expires: new Date(tokenExpires),
   })
 
   delete user.password

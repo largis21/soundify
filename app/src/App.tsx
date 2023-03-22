@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import MainPage from "./pages/mainPage";
 import LoginPage from "./pages/login";
 import { UserData, UserDataType, UserLoginInfoType} from "../utils/types"
-import { API_URL } from "../ENV"
 
 export default function App() {
   const [user, setUser] = useState<UserDataType | null>(null)
@@ -12,7 +11,7 @@ export default function App() {
     loginInfo: UserLoginInfoType, 
     ignoreResult: boolean
   ) {
-    const loginEndpoint = `${API_URL}/login`
+    const loginEndpoint = `${import.meta.env.VITE_API_URL}/login`
 
     const response = await fetch(loginEndpoint, {
       method: "POST",
@@ -31,8 +30,6 @@ export default function App() {
     const data = await response.json()
     const parsedUserData = UserData.safeParse(data)
 
-    console.log(data)
-
     if (parsedUserData.success) {
       setUser(parsedUserData.data)
     } else {
@@ -45,8 +42,6 @@ export default function App() {
     // Sends a login request with cookies
     sendLoginRequest({username: "", password: ""}, true)
   }, [])
-
-  // test
 
   if (user) {
     return (

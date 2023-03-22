@@ -1,5 +1,6 @@
-import { PlayingOptions } from "@/pages/mainPage"
-import { PlayingOptionsType, PlaylistDataType, SongDataType } from "utils/types"
+import { PlayingOptions } from "../pages/mainPage"
+import { PlaylistDataType, SongDataType } from "../../utils/types"
+import { SyntheticEvent } from "react"
 
 export default function PlaylistPage({ 
   playlist,
@@ -31,11 +32,11 @@ export default function PlaylistPage({
             bg-soundifyGreen w-10 flex justify-center items-center focus:outline-none"
           onClick={() => playSongFromPlaylist(0)}
         >
-          <img src={"../public/icons/play.svg"} alt="Play playlist" />
+          <img src={"/icons/play.svg"} alt="Play playlist" />
         </button>
         <ul className="mx-3 pt-2 border-t-neutral-600 border-t-[1px]">
           {
-            playlist.songs.map((song, index) => (
+            playlist.songs.map((song: SongDataType, index: number) => (
               <li key={song.song_id}>
                 <PlaylistSong
                   songIndex={index}
@@ -75,8 +76,8 @@ function PlaylistSong({
       </div>
 
       <img 
-        //src={imgPath || "../public/icons/cd_placeholder.svg"}
-        src={`http://localhost:8080/song/cover/${song.song_id}` || "../public/icons/cd_placeholder.svg"}
+        src={`http://localhost:8080/song/cover/${song.song_id}`}
+        onError={(e: SyntheticEvent<HTMLImageElement>) => e.currentTarget.src = "/icons/cd_placeholder.svg"}
         height={40}
         width={40}
         alt="Playlist cover" 

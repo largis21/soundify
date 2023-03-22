@@ -1,14 +1,14 @@
-import { Routes, UserDataType, PlaylistDataType } from "utils/types";
+import { Routes, UserDataType, PlaylistDataType } from "../../utils/types";
 
 const sidebarItems: {
     imgSrc: string,
     itemText: string,
     route: Routes
 }[] = [
-  { imgSrc: "../public/icons/home.svg", itemText: "Hjem", route: "home" },
-  { imgSrc: "../public/icons/search.svg", itemText: "Søk", route: "search" },
-  { imgSrc: "../public/icons/library.svg", itemText: "Bibliotek", route: "library" },
-  { imgSrc: "../public/icons/plus.svg", itemText: "Ny Spilleliste", route: "playlist" },
+  { imgSrc: "/icons/home.svg", itemText: "Hjem", route: "home" },
+  { imgSrc: "/icons/search.svg", itemText: "Søk", route: "search" },
+  { imgSrc: "/icons/library.svg", itemText: "Bibliotek", route: "library" },
+  { imgSrc: "/icons/plus.svg", itemText: "Ny Spilleliste", route: "search" },
 ]
 
 

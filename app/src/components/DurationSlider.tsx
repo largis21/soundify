@@ -1,4 +1,4 @@
-import { PlayingOptions } from "@/pages/mainPage";
+import { PlayingOptions } from "../pages/mainPage";
 import { useEffect, useState, ChangeEvent } from "react";
 import { formatTime } from "../../utils/formatTime";
 
