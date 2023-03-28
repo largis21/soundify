@@ -28,7 +28,7 @@ export default function Sidebar({
       <ul className="mt-[25px]">
         {sidebarItems.map((item) => (
           <SidebarItem 
-            key={item.route}
+            key={item.itemText + item.route}
             imgSrc={item.imgSrc}
             itemText={item.itemText}
             active={route === item.route}

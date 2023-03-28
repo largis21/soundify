@@ -14,7 +14,16 @@ const playlist_1 = __importDefault(require("./routes/playlist"));
 const song_1 = __importDefault(require("./routes/song"));
 const app = (0, express_1.default)();
 app.use((0, cors_1.default)({
-    origin: 'http://localhost:5173',
+    origin: [
+        'http://localhost:5173',
+        'https://localhost:5173',
+        'http://localhost:80',
+        'https://localhost:80',
+        'http://localhost:443',
+        'https://localhost:443',
+        'http://localhost:5500',
+        'https://localhost:5500'
+    ],
     credentials: true
 }));
 app.use(body_parser_1.default.json());

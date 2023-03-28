@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { UserLoginInfoType } from "utils/types";
+import { UserLoginInfoType } from "../../utils/types";
 
 export default function LoginPage({
   sendLoginRequest,

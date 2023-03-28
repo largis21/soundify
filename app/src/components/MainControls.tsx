@@ -1,4 +1,4 @@
-import { PlayingOptions } from "@/pages/mainPage"
+import { PlayingOptions } from "../pages/mainPage"
 
 export function MainControls({
   playingOptions,
@@ -56,7 +56,7 @@ export function MainControls({
       </button>
       <button>
        <img 
-        src="../public/icons/nextprev.svg" 
+        src="/icons/nextprev.svg" 
         alt="Previous song" 
         onClick={prevSong}
       />
@@ -68,15 +68,15 @@ export function MainControls({
         onClick={handlePauseClicked}
       >
         {playingOptions.isPlaying ? (
-          <img src={"../public/icons/pause.svg"} />
+          <img src={"/icons/pause.svg"} />
         ) : (
-          <img width={11} className="translate-x-[1px]" src={"../public/icons/play.svg"} />
+          <img width={11} className="translate-x-[1px]" src={"/icons/play.svg"} />
         )}
       </button>
       <button
         onClick={skipSong}
       >
-        <img src="../public/icons/nextprev.svg" alt="Next song" className="rotate-180" />
+        <img src="/icons/nextprev.svg" alt="Next song" className="rotate-180" />
       </button>
       <button onClick={toggleRepeat}>
         <RepeatIcon active={playingOptions.repeat} />

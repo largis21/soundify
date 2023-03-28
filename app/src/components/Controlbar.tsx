@@ -1,4 +1,4 @@
-import { PlayingOptions } from "@/pages/mainPage";
+import { PlayingOptions } from "../pages/mainPage";
 import { DurationSlider } from "./DurationSlider";
 import { MainControls } from "./MainControls";
 import { PlayingSong } from "./PlayingSong";

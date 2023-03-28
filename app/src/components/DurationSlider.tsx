@@ -27,7 +27,7 @@ export function DurationSlider({
 
   function handleSliderInput(e: ChangeEvent<HTMLInputElement>) {
     const parsedNewValue = parseFloat(e.target.value)
-    setProgressValue(parseFloat(e.target.value))
+    setProgressValue(parsedNewValue)
 
     const playingOptionsClone = playingOptions.clone()
     playingOptionsClone.currentTime = parsedNewValue
@@ -45,7 +45,7 @@ export function DurationSlider({
       </p>
       <input
         type={"range"}
-        step="0.01"
+        step="0.000000001"
         disabled={playingOptions.queue.length === 0}
         max={playingOptions.audioRef && playingOptions.audioRef.duration || 0}
         className="mx-4 form-range w-96 bg-neutral-600 rounded-full h-[.35rem] focus:outline-none

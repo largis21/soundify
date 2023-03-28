@@ -92,7 +92,7 @@ export default function MainPage({ user }: { user: UserDataType }) {
 
   useEffect(() => {
     if (!playingOptions.audioRef) return
-    
+
     if (
       playingOptions.isPlaying && 
       playingOptions.queue.length !== 0
@@ -107,10 +107,6 @@ export default function MainPage({ user }: { user: UserDataType }) {
 
       playingOptions.audioRef.currentTime = playingOptions.currentTime
       playingOptions.audioRef.play()
-
-      navigator.mediaSession.metadata = new MediaMetadata({
-        title: playingOptions.queue[0].song_name
-      })
     } else {
       playingOptions.audioRef.pause()
     }

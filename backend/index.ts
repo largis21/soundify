@@ -12,7 +12,16 @@ import songRoute from "./routes/song"
 const app = express();
 
 app.use(cors({
-  origin: 'http://localhost:5173',
+  origin: [
+    'http://localhost:5173',
+    'https://localhost:5173',
+    'http://localhost:80',
+    'https://localhost:80',
+    'http://localhost:443',
+    'https://localhost:443',
+    'http://localhost:5500',
+    'https://localhost:5500'
+  ],
   credentials: true
 }))
 
