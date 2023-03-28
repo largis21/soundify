@@ -12,16 +12,8 @@ export function DurationSlider({
   const [progressValue, setProgressValue] = useState(0);
 
   useEffect(() => {
-    if (!playingOptions.audioRef) return
-    playingOptions.audioRef.ontimeupdate = () => {
-      if (!playingOptions.audioRef) return
-      const currentTime = playingOptions.audioRef.currentTime
-      setProgressValue(currentTime)
-    }
-
-    playingOptions.audioRef.onended = () => {
-      if (!playingOptions.audioRef) return
-
+    playingOptions.audio.ontimeupdate = () => {
+      setProgressValue(playingOptions.audio.currentTime)
     }
   }, [playingOptions])
 
@@ -29,9 +21,7 @@ export function DurationSlider({
     const parsedNewValue = parseFloat(e.target.value)
     setProgressValue(parsedNewValue)
 
-    const playingOptionsClone = playingOptions.clone()
-    playingOptionsClone.currentTime = parsedNewValue
-    setPlayingOptions(playingOptionsClone)
+    playingOptions.audio.currentTime = parsedNewValue
   }
 
   return (
@@ -47,7 +37,7 @@ export function DurationSlider({
         type={"range"}
         step="0.000000001"
         disabled={playingOptions.queue.length === 0}
-        max={playingOptions.audioRef && playingOptions.audioRef.duration || 0}
+        max={playingOptions.audio.duration || 0}
         className="mx-4 form-range w-96 bg-neutral-600 rounded-full h-[.35rem] focus:outline-none
           filter -hue-rotate-[75deg]"
         value={playingOptions.queue.length === 0 ? 0 : progressValue}
@@ -55,8 +45,8 @@ export function DurationSlider({
       />
       <p className="text-neutral-400 text-xs w-7">
         { 
-          playingOptions.queue.length !== 0 && playingOptions.audioRef
-            ? formatTime(playingOptions.audioRef.duration)
+          playingOptions.queue.length !== 0
+            ? formatTime(playingOptions.audio.duration)
             : "‎"
         }
       </p>

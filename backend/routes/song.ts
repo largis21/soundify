@@ -44,15 +44,7 @@ router.get("/:id", async (
     return
   }
 
-  let songBlob;
-  try {
-    songBlob = readFileSync(path.resolve(__dirname, `../../songs/songs/${song.song_id}.mp3`));
-  } catch {
-    res.status(404).json({ error: "Could not find song" })
-    return
-  }
-
-  res.status(200).send(songBlob)
+  res.status(200).sendFile(path.resolve(__dirname, `../../songs/songs/${song.song_id}.mp3`))
 });
 
 router.get("/cover/:id", async (

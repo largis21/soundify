@@ -9,14 +9,11 @@ export function MainControls({
 }) {
   function handlePauseClicked() {
     const playingOptionsClone = playingOptions.clone()
-    if (!playingOptionsClone.audioRef) return
 
-    if (playingOptions.isPlaying) {
-      playingOptionsClone.isPlaying = false
-      playingOptionsClone.currentTime = 
-        playingOptionsClone.audioRef.currentTime || 0
+    if (!playingOptions.audio.paused) {
+      playingOptionsClone.pause()
     } else {
-      playingOptionsClone.isPlaying = true
+      playingOptionsClone.play()
     }
     setPlayingOptions(playingOptionsClone)
   }
@@ -39,7 +36,7 @@ export function MainControls({
 
   function prevSong() {
     const playingOptionsClone = playingOptions.clone()
-    playingOptionsClone.skipBackSong()
+    playingOptionsClone.restartSong()
     setPlayingOptions(playingOptionsClone)
   }
 
@@ -67,7 +64,7 @@ export function MainControls({
         disabled={playingOptions.queue.length === 0}
         onClick={handlePauseClicked}
       >
-        {playingOptions.isPlaying ? (
+        {!playingOptions.audio.paused ? (
           <img src={"/icons/pause.svg"} />
         ) : (
           <img width={11} className="translate-x-[1px]" src={"/icons/play.svg"} />

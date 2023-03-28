@@ -13,9 +13,16 @@ export default function PlaylistPage({
 }) {
   function playSongFromPlaylist(songIndex: number) {
     const playingOptionsClone = playingOptions.clone()
+
+    playingOptionsClone.queueIndex = 0
     playingOptionsClone.queue = playlist.songs.slice(songIndex)
-    playingOptionsClone.currentTime = 0
-    playingOptionsClone.isPlaying = true
+    playingOptionsClone.play()
+    playingOptionsClone.restartSong()
+
+    if (playingOptionsClone.shuffle) {
+      playingOptionsClone.shuffleQueue()
+    }
+    
     setPlayingOptions(playingOptionsClone)
   }
 
@@ -37,7 +44,7 @@ export default function PlaylistPage({
         <ul className="mx-3 pt-2 border-t-neutral-600 border-t-[1px]">
           {
             playlist.songs.map((song: SongDataType, index: number) => (
-              <li key={song.song_id}>
+              <li key={`${song.song_id}${index}`}>
                 <PlaylistSong
                   songIndex={index}
                   song={song}

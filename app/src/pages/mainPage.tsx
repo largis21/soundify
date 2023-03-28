@@ -8,23 +8,45 @@ import { UnfishedPage } from "../components/UnfinishedPage";
 
 export class PlayingOptions {
   isPlaying: boolean
-  currentTime: number
   shuffle: boolean
   repeat: boolean
-  audioRef: HTMLAudioElement | null
+  audio: HTMLAudioElement
   queue: SongDataType[]
+  queueIndex: number
   unShuffledQueue: SongDataType[]
   prevSong: SongDataType["song_id"] | null
 
   constructor() {
     this.isPlaying = false
-    this.currentTime = 0
     this.shuffle = false
     this.repeat = false
-    this.audioRef = null
+    this.audio = new Audio()
     this.queue = []
+    this.queueIndex = 0
     this.unShuffledQueue = []
     this.prevSong = null
+  }
+
+  play() {
+    if (this.queue.length === 0) {
+      this.audio.pause()
+      return
+    }
+
+    const newSong = this.queue[this.queueIndex]
+    const isSameSongAsLast = newSong.song_id === this.prevSong
+
+    if (!isSameSongAsLast) {
+      this.audio.src = `${import.meta.env.VITE_API_URL}/song/${newSong.song_id}`
+      this.prevSong = newSong.song_id
+      this.audio.currentTime = 0
+    }
+
+    this.audio.play()
+  }
+
+  pause() {
+    this.audio.pause()
   }
 
   addToQueue(song: SongDataType) {
@@ -32,44 +54,55 @@ export class PlayingOptions {
   }
 
   skipSong() {
-    if (
-      this.queue.length === 0 ||
-      this.queue.length === 1
-    ) {
+    if (this.queue.length === 0) return
+
+    if (this.queue.length - 1 < this.queueIndex + 1) {
       this.queue = []
+      this.audio.currentTime = 0
+      this.audio.pause()
       return
     }
 
-    this.queue = this.queue.slice(1)
-    this.currentTime = 0
+    this.queueIndex++
+    this.play()
   }
 
-  skipBackSong() {
-    this.currentTime = 0
+  restartSong() {
+    if (this.audio.currentTime < 1) {
+      if (this.queueIndex < 1) return
+      this.queueIndex--
+      this.play()
+    }
+
+    this.audio.currentTime = 0
   }
 
   shuffleQueue() {
     if (this.queue.length === 0) return
-    if (!this.audioRef) return
 
     if (this.unShuffledQueue.length !== 0) {
       this.queue = this.unShuffledQueue
     }
 
-    this.unShuffledQueue = this.queue
+    this.unShuffledQueue = this.queue // Slik vi kan sette tilbake køen til sin opprinnelige form senere 
 
-    this.queue = [this.queue[0], ...this.queue.slice(1).sort(() => Math.random() - 0.5)];
-    this.currentTime = this.audioRef.currentTime
+    const currentSong = this.queue[this.queueIndex] // Husk til senere
+    this.queue.splice(this.queueIndex, 1) // Fjern den fra køen
+    this.queue.sort(() => Math.random() - 0.5) // Ikke ekte shuffling, men bra nok
+    this.queue.splice(this.queueIndex, 0, currentSong) // Legg inn igjen sangen
+
     this.shuffle = true
   }
 
   unShuffleQueue() {
-    if (this.unShuffledQueue.length === 0) return
-    if (!this.audioRef) return
-
-    this.currentTime = this.audioRef.currentTime
-    this.queue = [this.queue[0], ...this.unShuffledQueue.slice(1)]
     this.shuffle = false
+
+    if (
+      this.unShuffledQueue.length === 0 ||
+      this.queue.length === 0
+    ) return
+
+    this.queue = this.unShuffledQueue
   }
 
   clone(): this {
@@ -82,50 +115,21 @@ export default function MainPage({ user }: { user: UserDataType }) {
   const [currentPlaylist, setCurrentPlaylist] = useState<PlaylistDataType | null>(null)
   const [playingOptions, setPlayingOptions] = useState(new PlayingOptions())
 
-  const audioRef = useRef<HTMLAudioElement | null>(null)
-
-  function handleSongEnded() {
-    const playingOptionsClone = playingOptions.clone()
-    playingOptionsClone.skipSong()
-    setPlayingOptions(playingOptionsClone)
-  }
-
   useEffect(() => {
-    if (!playingOptions.audioRef) return
-
-    if (
-      playingOptions.isPlaying && 
-      playingOptions.queue.length !== 0
-    ) {
-      const newSong = playingOptions.queue[0]
-      const isSameSongAsLast = newSong.song_id === playingOptions.prevSong
-
-      if (!isSameSongAsLast) {
-        playingOptions.audioRef.src = `${import.meta.env.VITE_API_URL}/song/${newSong.song_id}`
-        playingOptions.prevSong = newSong.song_id
+    playingOptions.audio.onended = () => {
+      const playingOptionsClone = playingOptions.clone()
+      if (playingOptionsClone.repeat) {
+        playingOptionsClone.restartSong()
+        playingOptionsClone.play()
+      } else {
+        playingOptionsClone.skipSong()
       }
-
-      playingOptions.audioRef.currentTime = playingOptions.currentTime
-      playingOptions.audioRef.play()
-    } else {
-      playingOptions.audioRef.pause()
+      setPlayingOptions(playingOptionsClone)
     }
   }, [playingOptions])
 
-  useEffect(() => {
-    if (!audioRef.current) return
-    const playingOptionsClone = playingOptions.clone()
-    playingOptionsClone.audioRef = audioRef.current
-    setPlayingOptions(playingOptionsClone)
-  }, [audioRef.current])
-
   return (
     <>
-      <audio 
-        src=""
-        ref={audioRef}
-        onEnded={handleSongEnded}
-      />
       <div className="flex flex-col min-h-screen max-h-screen">
         <div className="flex flex-row flex-1">
           <Sidebar 
@@ -140,6 +144,8 @@ export default function MainPage({ user }: { user: UserDataType }) {
             currentPlaylist={currentPlaylist}
             playingOptions={playingOptions}
             setPlayingOptions={setPlayingOptions}
+            setCurrentPlaylist={setCurrentPlaylist}
+            setRoute={setRoute}
           />
         </div>
         <Controlbar
@@ -156,18 +162,28 @@ function RouteSwitcher({
   user,
   currentPlaylist,
   playingOptions,
-  setPlayingOptions
+  setPlayingOptions,
+  setCurrentPlaylist,
+  setRoute
 }: {
   route: Routes,
   user: UserDataType,
   currentPlaylist: PlaylistDataType | null,
   playingOptions: PlayingOptions
   setPlayingOptions: (newPOpt: PlayingOptions) => any
+  setCurrentPlaylist: (newPlaylist: PlaylistDataType) => any
+  setRoute: (newRoute: Routes) => any
 }) {
   switch (route) {
     case "home":
       return (
-          <Landing user={user}/>
+          <Landing 
+            user={user}
+            setCurrentPlaylist={setCurrentPlaylist}
+            setRoute={setRoute}
+            playingOptions={playingOptions}
+            setPlayingOptions={setPlayingOptions}
+          />
       )
     case "playlist":
       if (currentPlaylist) {
