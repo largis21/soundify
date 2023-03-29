@@ -28,5 +28,4 @@ app/.vscode
 /backend/erd
 /backend/dist/
 
-*.env
 .vscode
