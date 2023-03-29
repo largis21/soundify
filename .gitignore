@@ -20,7 +20,6 @@ app/*.njsproj
 app/*.sln
 app/*.sw?
 app/package-lock.json
-app/pnpm-lock.yaml
 app/yarn.lock
 app/.vscode
 
