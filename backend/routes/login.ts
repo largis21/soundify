@@ -66,8 +66,10 @@ router.post("/", async (
     expires: tokenExpires 
   })
 
+  console.log(userToken)
+
   res.cookie("soundify_token", userToken, {
-    httpOnly: false,
+    httpOnly: true,
     secure: true,
     expires: new Date(tokenExpires),
   })
