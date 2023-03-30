@@ -14,9 +14,9 @@ const app = express();
 const FRONTEND_URL = process.env.FRONTEND_URL
 
 if (!FRONTEND_URL) {
-  throw new Error("No frontend url")
+  throw new Error("No frontend url");
 } else {
-  console.log(`Frontend url: ${FRONTEND_URL}`}
+  console.log(`Frontend url: ${FRONTEND_URL}`)
 }
 
 app.use(cors({
