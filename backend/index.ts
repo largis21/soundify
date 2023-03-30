@@ -11,6 +11,8 @@ import songRoute from "./routes/song"
 
 const app = express();
 
+console.log(process.env.FRONTEND_URL)
+
 app.use(cors({
   origin: [
     'http://localhost:5173',
