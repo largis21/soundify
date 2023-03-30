@@ -72,6 +72,7 @@ router.post("/", async (
     httpOnly: true,
     secure: true,
     expires: new Date(tokenExpires),
+    sameSite: "none"
   })
 
   delete user.password
