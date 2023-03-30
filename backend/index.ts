@@ -20,7 +20,8 @@ app.use(cors({
     'http://localhost:443',
     'https://localhost:443',
     'http://localhost:5500',
-    'https://localhost:5500'
+    'https://localhost:5500',
+    process.env.FRONTEND_URL || ""
   ],
   credentials: true
 }))

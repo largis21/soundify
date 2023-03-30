@@ -1,0 +1,32 @@
+{
+  "hash": "ce7331a7",
+  "browserHash": "edae06e2",
+  "optimized": {
+    "react": {
+      "src": "../../node_modules/.pnpm/react@18.2.0/node_modules/react/index.js",
+      "file": "react.js",
+      "fileHash": "db41dcdd",
+      "needsInterop": true
+    },
+    "react-dom/client": {
+      "src": "../../node_modules/.pnpm/react-dom@18.2.0_react@18.2.0/node_modules/react-dom/client.js",
+      "file": "react-dom_client.js",
+      "fileHash": "6184a9e4",
+      "needsInterop": true
+    },
+    "zod": {
+      "src": "../../node_modules/.pnpm/zod@3.21.4/node_modules/zod/lib/index.mjs",
+      "file": "zod.js",
+      "fileHash": "80d15439",
+      "needsInterop": false
+    }
+  },
+  "chunks": {
+    "chunk-QXXMOBL2": {
+      "file": "chunk-QXXMOBL2.js"
+    },
+    "chunk-RSJERJUL": {
+      "file": "chunk-RSJERJUL.js"
+    }
+  }
+}

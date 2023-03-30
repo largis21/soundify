@@ -84,6 +84,8 @@ export class PlayingOptions {
       this.queue = this.unShuffledQueue
     }
 
+    console.log("Start", this.queue.map((song) => song.song_id))
+
     this.unShuffledQueue = this.queue // Slik vi kan sette tilbake køen til sin opprinnelige form senere 
 
     const currentSong = this.queue[this.queueIndex] // Husk til senere
@@ -91,6 +93,8 @@ export class PlayingOptions {
     this.queue.sort(() => Math.random() - 0.5) // Ikke ekte shuffling, men bra nok
     this.queue.splice(this.queueIndex, 0, currentSong) // Legg inn igjen sangen
 
+    console.log("shuffled", this.queue.map((song) => song.song_id))
+    console.log("this unshuffledqueue", this.unShuffledQueue.map((song) => song.song_id))
     this.shuffle = true
   }
 
