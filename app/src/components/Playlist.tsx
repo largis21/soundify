@@ -83,7 +83,7 @@ function PlaylistSong({
       </div>
 
       <img 
-        src={`http://localhost:8080/song/cover/${song.song_id}`}
+        src={`${import.meta.env.VITE_API_URL}/song/cover/${song.song_id}`}
         onError={(e: SyntheticEvent<HTMLImageElement>) => e.currentTarget.src = "/icons/cd_placeholder.svg"}
         height={40}
         width={40}
