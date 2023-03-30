@@ -11,21 +11,17 @@ import songRoute from "./routes/song"
 
 const app = express();
 
-console.log(process.env.FRONTEND_URL)
+const FRONTEND_URL = process.env.FRONTEND_URL
+
+if (!FRONTEND_URL) {
+  throw new Error("No frontend url")
+} else {
+  console.log(`Frontend url: ${FRONTEND_URL}`}
+}
 
 app.use(cors({
-  origin: [
-    'http://localhost:5173',
-    'https://localhost:5173',
-    'http://localhost:80',
-    'https://localhost:80',
-    'http://localhost:443',
-    'https://localhost:443',
-    'http://localhost:5500',
-    'https://localhost:5500',
-    process.env.FRONTEND_URL || ""
-  ],
-  credentials: true
+  origin: FRONTEND_URL,
+  credentials: true,
 }))
 
 app.use(bodyParser.json())
