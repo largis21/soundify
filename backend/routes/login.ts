@@ -17,6 +17,7 @@ router.post("/", async (
   req: Request, 
   res: Response
 ) => {
+  console.log("HIT")
   const auth = getAuth(req)
   if (auth.user_id) {
     const user = await getUser({ userId: auth.user_id })
