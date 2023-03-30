@@ -20,7 +20,7 @@ if (!FRONTEND_URL) {
 }
 
 app.use(cors({
-  origin: FRONTEND_URL,
+  origin: "https://lars-soundify.netlify.app",
   credentials: true,
 }))
 
